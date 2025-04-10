@@ -1,0 +1,178 @@
+openapi: 3.0.0
+info:
+  title: Programme Development and Review API
+  version: 1.0.0
+  description: API for managing programmes in the Programme Development Unit
+servers:
+  - url: http://localhost:8080/programme
+paths:
+  /addProgramme:
+    post:
+      summary: Add a new programme
+      operationId: addProgramme
+      requestBody:
+        description: Programme object to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Programme'
+      responses:
+        '200':
+          description: Programme added successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+  /allProgrammes:
+    get:
+      summary: Retrieve all programmes
+      operationId: allProgrammes
+      responses:
+        '200':
+          description: A list of all programmes
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/Programme'
+  /programme/{programmeCode}:
+    get:
+      summary: Retrieve a programme by code
+      operationId: getProgramme
+      parameters:
+        - name: programmeCode
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Programme details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Programme'
+        '404':
+          description: Programme not found
+          content:
+            text/plain:
+              schema:
+                type: string
+  /programme/updateProgramme/{programmeCode}:
+    put:
+      summary: Update a programme by code
+      operationId: updateProgramme
+      parameters:
+        - name: programmeCode
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Programme object with updated information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Programme'
+      responses:
+        '200':
+          description: Programme updated successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+        '404':
+          description: Programme not found
+          content:
+            text/plain:
+              schema:
+                type: string
+  /programme/deleteProgramme/{programmeCode}:
+    delete:
+      summary: Delete a programme by code
+      operationId: deleteProgramme
+      parameters:
+        - name: programmeCode
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Programme deleted successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+        '404':
+          description: Programme not found
+          content:
+            text/plain:
+              schema:
+                type: string
+  /programmesDueForReview:
+    get:
+      summary: Retrieve all programmes due for review
+      operationId: getProgrammesDueForReview
+      responses:
+        '200':
+          description: A list of programmes due for review
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/Programme'
+  /programmesByFaculty/{faculty}:
+    get:
+      summary: Retrieve all programmes by faculty
+      operationId: getProgrammesByFaculty
+      parameters:
+        - name: faculty
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of programmes in the specified faculty
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/Programme'
+components:
+  schemas:
+    Programme:
+      type: object
+      properties:
+        programmeCode:
+          type: string
+        title:
+          type: string
+        nqfLevel:
+          type: string
+        faculty:
+          type: string
+        department:
+          type: string
+        registrationDate:
+          type: string
+          format: date
+        courses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Course'
+    Course:
+      type: object
+      properties:
+        courseCode:
+          type: string
+        courseName:
+          type: string
+        nqfLevel:
+          type: string
